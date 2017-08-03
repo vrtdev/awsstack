@@ -12,8 +12,6 @@ opts = GetoptLong.new(
   ['--templatefile', '-t', GetoptLong::REQUIRED_ARGUMENT],
   ['--paramfile', '-p', GetoptLong::REQUIRED_ARGUMENT],
   ['--environment', '-e', GetoptLong::REQUIRED_ARGUMENT],
-  ['--account', '-a', GetoptLong::REQUIRED_ARGUMENT],
-  # ['--yaml', '-y', GetoptLong::NO_ARGUMENT],
   ['--debug', '-d', GetoptLong::OPTIONAL_ARGUMENT]
 )
 
@@ -23,7 +21,6 @@ stackname = nil
 templatefile = nil
 paramfile = nil
 environment = nil
-account = nil
 debug = 0
 
 opts.each do |opt, arg|
@@ -36,12 +33,17 @@ opts.each do |opt, arg|
     show help
 
     -r, --role <rolename>
-    IAM role to use.
+    IAM role to use. From ~/.aws/config
 
     -o, --operation <operation>
     Operation to perform on the template. (...)
+    Operations :
+      check   Check a template on AWS
+      create  Create a stack
+      update  Update a stack
+      delete  Delete a stack
 
-    -s, --stackname
+    -s, --stackname <stackname>
     Stackname to operate on.
 
     -t, --templatefile <file>
@@ -52,9 +54,6 @@ opts.each do |opt, arg|
 
     -e, --environment <environment>
     Execution environment. (dev, stag, prod, ...)
-
-    -a, --account <AWS Account>
-    Aws account.
 
     -d, --debug [level]:
     Debug level.
@@ -73,8 +72,6 @@ opts.each do |opt, arg|
     paramfile = arg
   when '--environment'
     environment = arg
-  when '--account'
-    account = arg
   when '--debug'
     debug = if arg == ''
               1
@@ -97,7 +94,6 @@ AwsStack::CloudFormation.new(
   templatefile: templatefile,
   paramfile: paramfile,
   environment: environment,
-  account: account,
   debug: debug
 )
 

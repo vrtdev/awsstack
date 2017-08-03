@@ -11,7 +11,6 @@ module AwsStack
       @templatefile = options[:templatefile]
       @paramfile = options[:paramfile]
       @environment = options[:environment]
-      @account = options[:account]
       @debug = options[:debug]
 
       if public_methods.include?(@operation)
