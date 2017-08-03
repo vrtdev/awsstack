@@ -1,0 +1,104 @@
+#!/usr/bin/env ruby
+require 'getoptlong'
+require 'pp'
+
+require 'awsstack'
+
+opts = GetoptLong.new(
+  ['--help', '-h', GetoptLong::NO_ARGUMENT],
+  ['--role', '-r', GetoptLong::REQUIRED_ARGUMENT],
+  ['--operation', '-o', GetoptLong::REQUIRED_ARGUMENT],
+  ['--stackname', '-s', GetoptLong::REQUIRED_ARGUMENT],
+  ['--templatefile', '-t', GetoptLong::REQUIRED_ARGUMENT],
+  ['--paramfile', '-p', GetoptLong::REQUIRED_ARGUMENT],
+  ['--environment', '-e', GetoptLong::REQUIRED_ARGUMENT],
+  ['--account', '-a', GetoptLong::REQUIRED_ARGUMENT],
+  # ['--yaml', '-y', GetoptLong::NO_ARGUMENT],
+  ['--debug', '-d', GetoptLong::OPTIONAL_ARGUMENT]
+)
+
+role = nil
+operation = nil
+stackname = nil
+templatefile = nil
+paramfile = nil
+environment = nil
+account = nil
+debug = 0
+
+opts.each do |opt, arg|
+  case opt
+  when '--help'
+    puts <<-EOF
+    #{$PROGRAM_NAME} [OPTION]
+
+    -h, --help:
+    show help
+
+    -r, --role <rolename>
+    IAM role to use.
+
+    -o, --operation <operation>
+    Operation to perform on the template. (...)
+
+    -s, --stackname
+    Stackname to operate on.
+
+    -t, --templatefile <file>
+    Template file to use. (JSON format)
+
+    -p, --paramfile <file>
+    Optional Parameter file. (JSON format)
+
+    -e, --environment <environment>
+    Execution environment. (dev, stag, prod, ...)
+
+    -a, --account <AWS Account>
+    Aws account.
+
+    -d, --debug [level]:
+    Debug level.
+
+    EOF
+    exit
+  when '--role'
+    role = arg
+  when '--operation'
+    operation = arg
+  when '--stackname'
+    stackname = arg
+  when '--templatefile'
+    templatefile = arg
+  when '--paramfile'
+    paramfile = arg
+  when '--environment'
+    environment = arg
+  when '--account'
+    account = arg
+  when '--debug'
+    debug = if arg == ''
+              1
+            else
+              arg.to_i
+            end
+  end
+end
+
+awssession = AwsStack::AwsSession.new(profile: role)
+
+credentials = awssession.assumed_role.credentials
+
+creds = Aws::Credentials.new(credentials.access_key_id, credentials.secret_access_key, credentials.session_token)
+
+AwsStack::CloudFormation.new(
+  credentials: creds,
+  operation: operation,
+  stackname: stackname,
+  templatefile: templatefile,
+  paramfile: paramfile,
+  environment: environment,
+  account: account,
+  debug: debug
+)
+
+# vim:set fileencoding=utf8 fileformat=unix filetype=ruby tabstop=2 expandtab:
