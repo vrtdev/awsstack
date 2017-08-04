@@ -29,12 +29,17 @@ Or install it yourself as:
         show help
 
         -r, --role <rolename>
-        IAM role to use.
+        IAM role to use. From ~/.aws/config
 
         -o, --operation <operation>
         Operation to perform on the template. (...)
+        Operations :
+          check   Check a template on AWS
+          create  Create a stack
+          update  Update a stack
+          delete  Delete a stack
 
-        -s, --stackname
+        -s, --stackname <stackname>
         Stackname to operate on.
 
         -t, --templatefile <file>
@@ -48,7 +53,7 @@ Or install it yourself as:
 
         -d, --debug [level]:
         Debug level.
-
+        
 ( Todo: Debug Level is not implemented )
 
 ### example use
