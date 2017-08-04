@@ -47,7 +47,7 @@ you can then install this gem
 
         -d, --debug [level]:
         Debug level.
-
+        
 ( Todo: Debug Level is not implemented )
 
 ### example use
