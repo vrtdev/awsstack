@@ -47,7 +47,7 @@ you can then install this gem
 
         -d, --debug [level]:
         Debug level.
-        
+
 ( Todo: Debug Level is not implemented )
 
 ### example use
@@ -65,7 +65,7 @@ This file will automatically be used and the params passed to CFN.
     {
         "Parameters": {
             "AemEnvironmentNameParameter": "stag",
-            "LabelOwner": "causbrwa"
+            "LabelOwner": "zipkid"
         }
     }
 
