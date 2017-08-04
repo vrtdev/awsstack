@@ -22,7 +22,56 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    awsstack --help
+        /usr/local/bin/awsstack [OPTION]
+
+        -h, --help:
+        show help
+
+        -r, --role <rolename>
+        IAM role to use.
+
+        -o, --operation <operation>
+        Operation to perform on the template. (...)
+
+        -s, --stackname
+        Stackname to operate on.
+
+        -t, --templatefile <file>
+        Template file to use. (JSON format)
+
+        -p, --paramfile <file>
+        Optional Parameter file. (JSON format)
+
+        -e, --environment <environment>
+        Execution environment. (dev, stag, prod, ...)
+
+        -d, --debug [level]:
+        Debug level.
+
+( Todo: Debug Level is not implemented )
+
+### example use
+
+    awsstack -r vrt-dpc-sandbox-admin -t output/aem_author.json -e dev -s Aemsecuritydev -o create
+
+### params file
+
+To pass parameters to the CFN with this script, create a json file with the same
+name as the template file but in the directory <repo>/params/<env>/<template>
+The content should look like this.
+
+This file will automatically be used and the params passed to CFN.
+
+    {
+        "Parameters": {
+            "AemEnvironmentNameParameter": "stag",
+            "LabelOwner": "causbrwa"
+        }
+    }
+
+You can also pass a --paramfile option specifying an alternate params file
+
 
 ## Development
 
@@ -33,4 +82,3 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/awsstack.
-
