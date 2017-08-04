@@ -1,24 +1,18 @@
 # Awsstack
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/awsstack`. To experiment with that code, run `bin/console` for an interactive prompt.
+AWS CloudFormation stack creation helper
 
-TODO: Delete this and the text above, and describe your gem
+## Building
 
-## Installation
+Clone this repository and run
 
-Add this line to your application's Gemfile:
+    gem build awsstack.gemspec
 
-```ruby
-gem 'awsstack'
-```
+This will create `awsstack-<version>.gem`
 
-And then execute:
+you can then install this gem
 
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install awsstack
+    [sudo] gem install awsstack-<version>.gem
 
 ## Usage
 
@@ -29,12 +23,17 @@ Or install it yourself as:
         show help
 
         -r, --role <rolename>
-        IAM role to use.
+        IAM role to use. From ~/.aws/config
 
         -o, --operation <operation>
         Operation to perform on the template. (...)
+        Operations :
+          check   Check a template on AWS
+          create  Create a stack
+          update  Update a stack
+          delete  Delete a stack
 
-        -s, --stackname
+        -s, --stackname <stackname>
         Stackname to operate on.
 
         -t, --templatefile <file>
