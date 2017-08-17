@@ -1,4 +1,5 @@
 require 'aws-sdk'
+require 'awsstack/cfntemplate'
 
 module AwsStack
   # AWS Session creation with profile
