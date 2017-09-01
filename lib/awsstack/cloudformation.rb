@@ -57,8 +57,10 @@ module AwsStack
       File.open(file, 'r').read
     end
 
-    def read_template_file
-      @template = read_file @templatefile if File.file? @templatefile
+    def template
+      @template_instance || @template_instance = AwsStack::CfnTemplate.new(
+        credentials: @credentials, templatefile: @templatefile, stackname: @stackname
+      )
     end
 
     def read_param_file
@@ -88,31 +90,32 @@ module AwsStack
 
     def validate_template
       @cfn.validate_template(
-        template_body: read_template_file
+        template_body: template.body,
+        template_url: template.url
       )
     end
 
     def create_stack
-      @stack = @cfn.create_stack(
+      @cfn.create_stack(
         stack_name: @stackname, # required
-        template_body: @template,
+        template_body: template.body,
+        template_url: template.url,
         capabilities: ['CAPABILITY_IAM'],
         parameters: @params
-      )
-      @stack.stack_id
+      ).stack_id
     rescue Aws::CloudFormation::Errors::AlreadyExistsException, Aws::CloudFormation::Errors::ValidationError => e
       puts "#{e.class} : #{e.message}"
       exit 1
     end
 
     def update_stack
-      @stack = @cfn.update_stack(
+      @cfn.update_stack(
         stack_name: @stackname, # required
-        template_body: @template,
+        template_body: template.body,
+        template_url: template.url,
         capabilities: ['CAPABILITY_IAM'],
         parameters: @params
-      )
-      @stack.stack_id
+      ).stack_id
     rescue Aws::CloudFormation::Errors::ValidationError => e
       puts "#{e.class} : #{e.message}"
       exit 1
