@@ -59,10 +59,7 @@ module AwsStack
         serial_number: @mfa_serial,
         token_code: @token_code
       )
-    rescue Aws::STS::Errors::ValidationError => e
-      puts "#{e.class} : #{e.message}"
-      exit 1
-    rescue Aws::STS::Errors::AccessDenied => e
+    rescue Aws::STS::Errors::ValidationError, Aws::STS::Errors::AccessDenied => e
       puts "#{e.class} : #{e.message}"
       exit 1
     end
@@ -79,7 +76,7 @@ module AwsStack
         @assumed_role = nil
         File.delete(@session_save_filename)
       else
-        arn = @assumed_role.assumed_role_user.arn
+        @assumed_role.assumed_role_user.arn
         # puts "Found valid session credentials : #{arn}"
       end
     end
