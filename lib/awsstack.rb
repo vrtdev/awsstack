@@ -1,5 +1,4 @@
 require 'awsstack/version'
-require 'awsstack/awssession'
 require 'awsstack/cloudformation'
 
 module Awsstack

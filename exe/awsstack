@@ -2,31 +2,13 @@
 require 'getoptlong'
 require 'pp'
 
+require 'aws_config'
+require 'awssession'
 require 'awsstack'
 
-opts = GetoptLong.new(
-  ['--help', '-h', GetoptLong::NO_ARGUMENT],
-  ['--role', '-r', GetoptLong::REQUIRED_ARGUMENT],
-  ['--stackname', '-s', GetoptLong::REQUIRED_ARGUMENT],
-  ['--templatefile', '-t', GetoptLong::REQUIRED_ARGUMENT],
-  ['--paramfile', '-p', GetoptLong::REQUIRED_ARGUMENT],
-  ['--environment', '-e', GetoptLong::REQUIRED_ARGUMENT],
-  ['--operation', '-o', GetoptLong::REQUIRED_ARGUMENT],
-  ['--debug', '-d', GetoptLong::OPTIONAL_ARGUMENT]
-)
+def clidoc
+  puts <<-CLIDOC
 
-role = nil
-operation = nil
-stackname = nil
-templatefile = nil
-paramfile = nil
-environment = nil
-debug = 0
-
-opts.each do |opt, arg|
-  case opt
-  when '--help'
-    puts <<-EOF
     #{$PROGRAM_NAME} [OPTION]
 
     -h, --help:
@@ -59,7 +41,32 @@ opts.each do |opt, arg|
     -d, --debug [level]:
     Debug level.
 
-    EOF
+  CLIDOC
+end
+
+opts = GetoptLong.new(
+  ['--help', '-h', GetoptLong::NO_ARGUMENT],
+  ['--role', '-r', GetoptLong::REQUIRED_ARGUMENT],
+  ['--stackname', '-s', GetoptLong::REQUIRED_ARGUMENT],
+  ['--templatefile', '-t', GetoptLong::REQUIRED_ARGUMENT],
+  ['--paramfile', '-p', GetoptLong::REQUIRED_ARGUMENT],
+  ['--environment', '-e', GetoptLong::REQUIRED_ARGUMENT],
+  ['--operation', '-o', GetoptLong::REQUIRED_ARGUMENT],
+  ['--debug', '-d', GetoptLong::OPTIONAL_ARGUMENT]
+)
+
+role = nil
+operation = nil
+stackname = nil
+templatefile = nil
+paramfile = nil
+environment = nil
+debug = 0
+
+opts.each do |opt, arg|
+  case opt
+  when '--help'
+    clidoc
     exit
   when '--role'
     role = arg
@@ -82,14 +89,15 @@ opts.each do |opt, arg|
   end
 end
 
-awssession = AwsStack::AwsSession.new(profile: role)
+profile_name = role
+profile = AWSConfig[profile_name]
+profile['name'] = profile_name
 
-credentials = awssession.assumed_role.credentials
-
-creds = Aws::Credentials.new(credentials.access_key_id, credentials.secret_access_key, credentials.session_token)
+awssession = AwsSession.new(profile: profile)
+awssession.start
 
 AwsStack::CloudFormation.new(
-  credentials: creds,
+  credentials: awssession.credentials,
   operation: operation,
   stackname: stackname,
   templatefile: templatefile,
