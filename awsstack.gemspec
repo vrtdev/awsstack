@@ -5,6 +5,7 @@ require 'awsstack/version'
 Gem::Specification.new do |spec|
   spec.name          = 'awsstack'
   spec.version       = AwsStack::VERSION
+  spec.licenses      = ['MIT']
   spec.authors       = ['Stefan - Zipkid - Goethals']
   spec.email         = ['stefan.goethals@vrt.be']
 
