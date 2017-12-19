@@ -65,7 +65,7 @@ module AwsStack
 
     def read_param_file
       param_file = if @paramfile.class == NilClass
-                     "params/#{@environment}/#{File.basename @templatefile}"
+                     "output/params/#{@environment}/#{File.basename @templatefile}"
                    else
                      @paramfile
                    end

@@ -57,7 +57,7 @@ you can then install this gem
 ### params file
 
 To pass parameters to the CFN with this script, create a json file with the same
-name as the template file but in the directory <repo>/params/<env>/<template>
+name as the template file but in the directory <repo>/output/params/<env>/<template>
 The content should look like this.
 
 This file will automatically be used and the params passed to CFN.
